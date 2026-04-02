@@ -8,6 +8,7 @@ Este repositorio contiene una herramienta web interactiva diseñada para la crea
 
 * **Autor:** Antonio Gabucio López
 * **ORCID:** [0000-0001-6000-9937](https://orcid.org/0000-0001-6000-9937)
+  [![DOI](https://zenodo.org/badge/1199813329.svg)](https://doi.org/10.5281/zenodo.19392576)
 
 ## 📋 Descripción Técnica
 

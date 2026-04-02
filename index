@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Marcadores AR - Antonio Gabucio López</title>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/three.js/examples/marker-training/threex-arpatternfile.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; background-color: #f0f2f5; color: #1c1e21; }
+        .container { background: white; max-width: 700px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        canvas { border: 5px solid #000; margin-top: 20px; max-width: 100%; height: auto; }
+        button { margin: 10px; padding: 12px 24px; cursor: pointer; font-weight: bold; border: none; border-radius: 8px; transition: 0.3s; }
+        #btnDescargarPNG { background-color: #4267b2; color: white; }
+        #btnDescargarPATT { background-color: #00a400; color: white; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .instrucciones { text-align: left; background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
+        .footer { margin-top: 30px; font-size: 0.8em; color: #65676b; border-top: 1px solid #ddd; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Patrones WebAR</h1>
+        <div class="instrucciones">
+            <strong>Metodología:</strong> Esta herramienta convierte imágenes a una cuadrícula de 16x16 píxeles en escala de grises de alto contraste. Este proceso optimiza la detección de descriptores por el motor de visión artificial de AR.js, garantizando la estabilidad del modelo 3D.
+        </div>
+        
+        <h3>1. Cargar Imagen de Referencia</h3>
+        <input type="file" id="imageInput" accept="image/png, image/jpeg, image/svg+xml">
+        <br>
+        <canvas id="markerCanvas" width="512" height="512"></canvas>
+        <br><br>
+
+        <h3>2. Exportar Activos</h3>
+        <button id="btnDescargarPNG" disabled>Descargar Marcador (PNG)</button>
+        <button id="btnDescargarPATT" disabled>Descargar Patrón (.PATT)</button>
+
+        <div class="footer">
+            Desarrollado por <strong>Antonio Gabucio López</strong> | ORCID: 0000-0001-6000-9937<br>
+            Herramienta de soporte para proyectos de Realidad Aumentada Cardíaca.
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const canvas = document.getElementById('markerCanvas');
+        const ctx = canvas.getContext('2d');
+        const btnPNG = document.getElementById('btnDescargarPNG');
+        const btnPATT = document.getElementById('btnDescargarPATT');
+        let pixelatedImageForPattern = '';
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) { drawMarker(event.target.result); }
+            reader.readAsDataURL(file);
+        });
+
+        function drawMarker(imageSrc) {
+            const img = new Image();
+            img.onload = function() {
+                const gridSize = 16; [cite: 82]
+                const innerSize = canvas.width * 0.5; [cite: 82]
+                const offset = (canvas.width - innerSize) / 2; [cite: 82]
+
+                ctx.fillStyle = 'black'; [cite: 82]
+                ctx.fillRect(0, 0, canvas.width, canvas.height); [cite: 82]
+
+                const tinyCanvas = document.createElement('canvas');
+                tinyCanvas.width = gridSize; [cite: 82]
+                tinyCanvas.height = gridSize; [cite: 82]
+                const tCtx = tinyCanvas.getContext('2d');
+
+                tCtx.fillStyle = 'white'; [cite: 82]
+                tCtx.fillRect(0, 0, gridSize, gridSize); [cite: 82]
+                tCtx.filter = 'grayscale(100%) contrast(150%)'; [cite: 82]
+                tCtx.drawImage(img, 0, 0, gridSize, gridSize); [cite: 82]
+
+                ctx.imageSmoothingEnabled = false; [cite: 82]
+                ctx.drawImage(tinyCanvas, 0, 0, gridSize, gridSize, offset, offset, innerSize, innerSize); [cite: 82]
+
+                pixelatedImageForPattern = tinyCanvas.toDataURL('image/png'); [cite: 82]
+                btnPNG.disabled = false; [cite: 82]
+                btnPATT.disabled = false; [cite: 82]
+            }
+            img.src = imageSrc;
+        }
+
+        btnPNG.addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'marcador_antonio_gabucio.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        btnPATT.addEventListener('click', function() {
+            THREEx.ArPatternFile.encodeImageURL(pixelatedImageForPattern, function(patternFileString) { [cite: 82]
+                const blob = new Blob([patternFileString], {type: 'text/plain'}); [cite: 82]
+                const link = document.createElement('a');
+                link.download = 'patron_antonio_gabucio.patt'; [cite: 82]
+                link.href = URL.createObjectURL(blob); [cite: 82]
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>

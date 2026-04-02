@@ -8,7 +8,7 @@ Este repositorio contiene una herramienta web interactiva diseñada para la crea
 
 * **Autor:** Antonio Gabucio López
 * **ORCID:** [0000-0001-6000-9937](https://orcid.org/0000-0001-6000-9937)
-
+* **DOI:** 10.5281/zenodo.19392577
 ## 📋 Descripción Técnica
 
 La herramienta automatiza el proceso de adecuación de imágenes de entrada para maximizar la eficiencia de lectura del motor de AR.js. El algoritmo integrado realiza las siguientes operaciones:

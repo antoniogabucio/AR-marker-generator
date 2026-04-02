@@ -2,33 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de Marcadores AR (Pixelado Eficiente)</title>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/examples/marker-training/threex-arpatternfile.js"></script>
+    <title>Generador de Marcadores AR - Antonio Gabucio López</title>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/three.js/examples/marker-training/threex-arpatternfile.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
-        canvas { border: 2px solid #333; margin-top: 20px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
-        button { margin: 10px; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        .instrucciones { max-width: 600px; margin: 0 auto 20px auto; text-align: left; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; background-color: #f0f2f5; color: #1c1e21; }
+        .container { background: white; max-width: 700px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        canvas { border: 5px solid #000; margin-top: 20px; max-width: 100%; height: auto; }
+        button { margin: 10px; padding: 12px 24px; cursor: pointer; font-weight: bold; border: none; border-radius: 8px; transition: 0.3s; }
+        #btnDescargarPNG { background-color: #4267b2; color: white; }
+        #btnDescargarPATT { background-color: #00a400; color: white; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .instrucciones { text-align: left; background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
+        .footer { margin-top: 30px; font-size: 0.8em; color: #65676b; border-top: 1px solid #ddd; padding-top: 15px; }
     </style>
 </head>
 <body>
 
-    <h2>1. Sube tu imagen</h2>
-    <div class="instrucciones">
-        <p>El sistema convertirá tu imagen a <strong>blanco y negro</strong> y la <strong>pixelará a una cuadrícula de 16x16</strong>. Esto maximiza la eficiencia de lectura de AR.js.</p>
+    <div class="container">
+        <h1>Generador de Patrones WebAR</h1>
+        <div class="instrucciones">
+            <strong>Metodología:</strong> Esta herramienta convierte imágenes a una cuadrícula de 16x16 píxeles en escala de grises de alto contraste. Este proceso optimiza la detección de descriptores por el motor de visión artificial de AR.js, garantizando la estabilidad del modelo 3D.
+        </div>
+        
+        <h3>1. Cargar Imagen de Referencia</h3>
+        <input type="file" id="imageInput" accept="image/png, image/jpeg, image/svg+xml">
+        <br>
+        <canvas id="markerCanvas" width="512" height="512"></canvas>
+        <br><br>
+
+        <h3>2. Exportar Activos</h3>
+        <button id="btnDescargarPNG" disabled>Descargar Marcador (PNG)</button>
+        <button id="btnDescargarPATT" disabled>Descargar Patrón (.PATT)</button>
+
+        <div class="footer">
+            Desarrollado por <strong>Antonio Gabucio López</strong> | ORCID: 0000-0001-6000-9937<br>
+            Herramienta de soporte para proyectos de Realidad Aumentada Cardíaca.
+        </div>
     </div>
-    
-    <input type="file" id="imageInput" accept="image/png, image/jpeg, image/svg+xml">
-
-    <br>
-
-    <canvas id="markerCanvas" width="512" height="512"></canvas>
-
-    <br><br>
-
-    <h2>2. Descarga tus archivos</h2>
-    <button id="btnDescargarPNG" disabled>Descargar Marcador (PNG)</button>
-    <button id="btnDescargarPATT" disabled>Descargar Archivo de Datos (.patt)</button>
 
     <script>
         const imageInput = document.getElementById('imageInput');
@@ -36,74 +46,59 @@
         const ctx = canvas.getContext('2d');
         const btnPNG = document.getElementById('btnDescargarPNG');
         const btnPATT = document.getElementById('btnDescargarPATT');
-
         let pixelatedImageForPattern = '';
 
         imageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(event) {
-                drawMarker(event.target.result);
-            }
+            reader.onload = function(event) { drawMarker(event.target.result); }
             reader.readAsDataURL(file);
         });
 
         function drawMarker(imageSrc) {
             const img = new Image();
             img.onload = function() {
-                const gridSize = 16; // La cuadrícula interna que leerá el motor de AR.js
-                const innerSize = canvas.width * 0.5; // 256 (tamaño del centro)
-                const offset = (canvas.width - innerSize) / 2; // 128 (margen negro)
+                const gridSize = 16; [cite: 82]
+                const innerSize = canvas.width * 0.5; [cite: 82]
+                const offset = (canvas.width - innerSize) / 2; [cite: 82]
 
-                // 1. Dibujar el marco negro exterior
-                ctx.fillStyle = 'black';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'black'; [cite: 82]
+                ctx.fillRect(0, 0, canvas.width, canvas.height); [cite: 82]
 
-                // 2. Crear un canvas "diminuto" de 16x16 píxeles
                 const tinyCanvas = document.createElement('canvas');
-                tinyCanvas.width = gridSize;
-                tinyCanvas.height = gridSize;
+                tinyCanvas.width = gridSize; [cite: 82]
+                tinyCanvas.height = gridSize; [cite: 82]
                 const tCtx = tinyCanvas.getContext('2d');
 
-                // 3. Pintar fondo blanco y dibujar la imagen en el canvas diminuto (aplicando blanco y negro)
-                tCtx.fillStyle = 'white';
-                tCtx.fillRect(0, 0, gridSize, gridSize);
-                tCtx.filter = 'grayscale(100%) contrast(150%)';
-                tCtx.drawImage(img, 0, 0, gridSize, gridSize);
-                tCtx.filter = 'none';
+                tCtx.fillStyle = 'white'; [cite: 82]
+                tCtx.fillRect(0, 0, gridSize, gridSize); [cite: 82]
+                tCtx.filter = 'grayscale(100%) contrast(150%)'; [cite: 82]
+                tCtx.drawImage(img, 0, 0, gridSize, gridSize); [cite: 82]
 
-                // 4. MAGIA: Desactivar el suavizado al escalar en el canvas principal
-                // Esto hace que la imagen no se vea borrosa, sino como píxeles grandes y duros.
-                ctx.imageSmoothingEnabled = false;
+                ctx.imageSmoothingEnabled = false; [cite: 82]
+                ctx.drawImage(tinyCanvas, 0, 0, gridSize, gridSize, offset, offset, innerSize, innerSize); [cite: 82]
 
-                // 5. Dibujar la imagen de 16x16 ampliada al tamaño de 256x256 en el centro del marcador
-                ctx.drawImage(tinyCanvas, 0, 0, gridSize, gridSize, offset, offset, innerSize, innerSize);
-
-                // 6. Guardar la imagen en B/N y tamaño original para la creación del .patt
-                pixelatedImageForPattern = tinyCanvas.toDataURL('image/png');
-
-                // Habilitar botones
-                btnPNG.disabled = false;
-                btnPATT.disabled = false;
+                pixelatedImageForPattern = tinyCanvas.toDataURL('image/png'); [cite: 82]
+                btnPNG.disabled = false; [cite: 82]
+                btnPATT.disabled = false; [cite: 82]
             }
             img.src = imageSrc;
         }
 
         btnPNG.addEventListener('click', function() {
             const link = document.createElement('a');
-            link.download = 'marcador_16x16.png';
+            link.download = 'marcador_antonio_gabucio.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
 
         btnPATT.addEventListener('click', function() {
-            THREEx.ArPatternFile.encodeImageURL(pixelatedImageForPattern, function(patternFileString) {
-                const blob = new Blob([patternFileString], {type: 'text/plain'});
+            THREEx.ArPatternFile.encodeImageURL(pixelatedImageForPattern, function(patternFileString) { [cite: 82]
+                const blob = new Blob([patternFileString], {type: 'text/plain'}); [cite: 82]
                 const link = document.createElement('a');
-                link.download = 'patron_16x16.patt';
-                link.href = URL.createObjectURL(blob);
+                link.download = 'patron_antonio_gabucio.patt'; [cite: 82]
+                link.href = URL.createObjectURL(blob); [cite: 82]
                 link.click();
             });
         });

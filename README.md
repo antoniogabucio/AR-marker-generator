@@ -21,7 +21,7 @@ La herramienta automatiza el proceso de adecuación de imágenes de entrada para
 ## 🚀 Instrucciones de Uso
 
 Puede utilizar la herramienta directamente desde el navegador a través de GitHub Pages:
-**[AÑADIR AQUÍ EL ENLACE A TU GITHUB PAGES DEL GENERADOR]**
+**[https://antoniogabucio.github.io/AR-marker-generator/]**
 
 1. Haga clic en **Seleccionar archivo** y cargue una imagen (preferiblemente cuadrada y con formas claras).
 2. La herramienta generará automáticamente una previsualización del marcador con su borde reglamentario.

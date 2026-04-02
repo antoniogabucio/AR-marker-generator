@@ -31,7 +31,7 @@ Puede utilizar la herramienta directamente desde el navegador a través de GitHu
 ## 🔗 Proyecto Principal Vinculado
 
 Esta herramienta fue desarrollada como instrumento metodológico para el siguiente proyecto de Realidad Aumentada interactiva:
-* **Visualización y Control del Ritmo Cardíaco en WebAR:** [AÑADIR AQUÍ EL ENLACE A TU REPOSITORIO PIN-CORAZON]
+* **Visualización y Control del Ritmo Cardíaco en WebAR:** [(https://antoniogabucio.github.io/mi-corazon-ar/)]
 
 ## 📚 Atribuciones Tecnológicas
 
